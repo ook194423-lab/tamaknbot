@@ -64,4 +64,4 @@ def handle_message(message):
 # 5. تشغيل السيرفر والبوت معاً بشكل نظيف وآمن
 if __name__ == "__main__":
     keep_alive()
-    bot.infinity_polling()
+    bot.infinity_polling(skip_pending=True)
