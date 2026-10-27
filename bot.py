@@ -5,7 +5,7 @@ import telebot
 from openai import OpenAI
 
 # 1. إعدادات الاتصال والتوكنات
-TELEGRAM_TOKEN = "8617730400:AAHUA-1e7Cay2w51x6hbrtZEeSQ50-YarmU"
+TELEGRAM_TOKEN = "8877911474:AAFpbatdHsPQvLqEX0NYcc0M--okOCqLCLw"
 OPENAI_API_KEY = "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"
 
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
