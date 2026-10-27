@@ -1,6 +1,5 @@
 import os
-from flask import Flask
-from threading import Thread
+from flask import Flask, request
 import telebot
 from openai import OpenAI
 
@@ -11,20 +10,20 @@ OPENAI_API_KEY = "sk-proj-sMNF9-GsPM2PruasaS1_aIhxMhpY8aRJbKqhLryQxZGaxCcPWLaGMw
 bot = telebot.TeleBot(TELEGRAM_TOKEN)
 client = OpenAI(api_key=OPENAI_API_KEY)
 
-# 2. سيرفر Flask الوهمي لإرضاء بورتات Render المجانية
-app = Flask('')
+# 2. إعداد سيرفر Flask
+app = Flask(__name__)
 
 @app.route('/')
 def home():
     return "Bot is alive!"
 
-def run():
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
-
-def keep_alive():
-    t = Thread(target=run)
-    t.start()
+# مسار استقبال التحديثات من تيليجرام (Webhook)
+@app.route(f'/{TELEGRAM_TOKEN}', methods=['POST'])
+def webhook():
+    json_string = request.get_data().decode('utf-8')
+    update = telebot.types.Update.de_json(json_string)
+    bot.process_new_updates([update])
+    return "!", 200
 
 # 3. قاعدة المعرفة والروابط الرسمية لمنصة "تمكن"
 BOT_KNOWLEDGE = """
@@ -61,7 +60,7 @@ def handle_message(message):
     except Exception as e:
         print(f"صار خطأ: {e}")
 
-# 5. تشغيل السيرفر والبوت معاً بشكل نظيف وآمن
 if __name__ == "__main__":
-    keep_alive()
-    bot.infinity_polling(skip_pending=True)
+    # تشغيل السيرفر محلياً أو استجابة لبورتات Render
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
